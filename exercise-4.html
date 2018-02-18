@@ -37,6 +37,37 @@
 
     const root = document.getElementById('root');
 
+    // TODO: --------------------------------------------------------
+    class AddTodo extends React.Component {
+      render() {
+        // going to 'react' to an event and render to DOM
+        const onSubmit = (event) => {
+          // prevent default behaviour
+          event.preventDefault();
+
+          // get the input data
+          const newTaskInput = event.target.elements.newTask;
+
+          // & add it to this react component
+          this.props.addNewTask(newTaskInput.value);
+
+          // clear the input data
+          newTaskInput.value = '';
+        };
+
+        // return what to be rendered - usually handles the HTML portion of React
+        return (
+          <div>
+          <form onSubmit={onSubmit}>
+            <input name='newTask' type='text' placeholder='O shit its lit'/>
+            <button type='submit'>Add</button>
+          </form>
+          </div>
+        );
+      }
+    }
+    // --------------------------------------------------------  TODO:
+
     class TodoTaskItem extends React.Component {
       render() {
         // checkboxes have boolean val
@@ -47,37 +78,49 @@
           </tr>);
       }
     }
-    
-    // this.state should be inside the outermost 'super' class
-    
+   
     // props should be passed in as a parameter to the constructor class
-    class TodoList extends React.Component {
+    class TodoList extends React.Component {      
 
-      // with states you can read it at anytime
-      // can also update state with this.setState()
-      // ^ happens in response to some event (usr action, timeout, or AJAX)
-      // setState mutates the state - but is async - which is why it needs the timeout in order to have time to get the new state w/changes and re-render it
-
+      // set state on initialization
       constructor(props) {
         super(props);
-        this.state = [{taskName: 'Walk Dog', finished: true}, {taskName: 'Buy Bread', finished: false}];
-
+        this.state = {tasks: [{taskName: 'Walk Dog', finished: true}, {taskName: 'Buy Bread', finished: false}]};
+        
+        // FIXME: idk why this works - get mentor help
+        this.addNewTask = this.addNewTask.bind(this);
       }
+
+      addNewTask(task) {
+        // ** pushing atm b/c idk why concat is used
+        // also omitting oldTaskList portion cause it isn't called anywhere else
+
+        const newTask = {taskName: task, finished: false}
+        const newTaskList = this.state.tasks.concat(newTask);
+        
+        // the example for the cityNames uses an obj for state - this exercise uses an Array
+        this.setState({tasks: newTaskList});
+      }
+
       
       render() {
-        const tasksItems = this.state.map((taskObj) => {
-          return (<TodoTaskItem taskName={taskObj.taskName} finished={taskObj.finished} />)
+        const tasksItems = this.state.tasks.map((taskObj) => {
+          return <TodoTaskItem taskName={taskObj.taskName} finished={taskObj.finished} />
         }); 
 
         return (
-          <table>
-            <thead>
-              <tr><td>Task</td><td>Done?</td></tr>
-            </thead>
-            <tbody>
-              {tasksItems}
-            </tbody>
-          </table>
+          <div>
+            <table>
+              <thead>
+                <tr><td>Task</td><td>Done?</td></tr>
+              </thead>
+              <tbody>
+                {tasksItems}
+              </tbody>
+            </table>
+            <hr/> 
+            <AddTodo addNewTask={this.addNewTask}/>
+          </div>
         )
       }
     }
