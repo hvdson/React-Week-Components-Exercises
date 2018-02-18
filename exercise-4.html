@@ -37,7 +37,55 @@
 
     const root = document.getElementById('root');
 
-    // TYPE ANSWER HERE
+    class TodoTaskItem extends React.Component {
+      render() {
+        // checkboxes have boolean val
+        // when passing in boolean vals for props - need to wrap it in an obj
+        return (<tr>
+          <td>{this.props.taskName}</td>
+          <td><input type='checkbox' defaultChecked={this.props.finished}/></td> 
+          </tr>);
+      }
+    }
+    
+    // this.state should be inside the outermost 'super' class
+    
+    // props should be passed in as a parameter to the constructor class
+    class TodoList extends React.Component {
+
+      // with states you can read it at anytime
+      // can also update state with this.setState()
+      // ^ happens in response to some event (usr action, timeout, or AJAX)
+      // setState mutates the state - but is async - which is why it needs the timeout in order to have time to get the new state w/changes and re-render it
+
+      constructor(props) {
+        super(props);
+        this.state = [{taskName: 'Walk Dog', finished: true}, {taskName: 'Buy Bread', finished: false}];
+
+      }
+      
+      render() {
+        const tasksItems = this.state.map((taskObj) => {
+          return (<TodoTaskItem taskName={taskObj.taskName} finished={taskObj.finished} />)
+        }); 
+
+        return (
+          <table>
+            <thead>
+              <tr><td>Task</td><td>Done?</td></tr>
+            </thead>
+            <tbody>
+              {tasksItems}
+            </tbody>
+          </table>
+        )
+      }
+    }
+
+    ReactDOM.render(
+      (<TodoList/>),
+      root);
+
 
     </script>
   </body>
