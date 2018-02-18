@@ -29,10 +29,59 @@
     </div>
     <script type="text/babel">
 
+    // TODO: refactor to use external tasks array
+
     const root = document.getElementById('root');
     const tasks = [{taskName: 'Walk Dog', finished: true}, {taskName: 'Buy Bread', finished: false}];
+    
 
     // TYPE ANSWER HERE
+
+    class TodoTaskItem extends React.Component {
+      render() {
+        
+        // checkboxes have boolean val
+        // when passing in boolean vals for props - need to wrap it in an obj
+        return (<tr>
+          <td>{this.props.taskName}</td>
+          <td><input type='checkbox' defaultChecked={this.props.finished}/></td> 
+          </tr>);
+      }
+    }
+
+
+
+    // ** NEED TO HAVE CAPITAL LETTER FOR COMPONENTS
+    class TodoList extends React.Component {
+      // create the render method - returns a DOM state
+      render() {
+        // first handle props within the super class then refactor to work with 'this.'
+        // Does destructuring obj within component call work? - NOPE
+        
+        const tasksItems = this.props.tasks.map((taskObj) => {
+          return (<TodoTaskItem taskName={taskObj.taskName} finished={taskObj.finished} />)
+        });
+        // <TodoTaskItem taskName='Walk dog' finished={true}/>
+        // <TodoTaskItem taskName='Buy bread' finished={false}/>
+
+        return (
+          <table>
+            <thead>
+              <tr><td>Task</td><td>Done?</td></tr>
+            </thead>
+            <tbody>
+              {tasksItems}
+            </tbody>
+          </table>
+        )
+      }
+
+
+    }
+
+    ReactDOM.render(
+      (<TodoList tasks={tasks}/>),
+      root);
 
     </script>
   </body>
